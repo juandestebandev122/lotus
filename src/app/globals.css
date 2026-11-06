@@ -1,0 +1,551 @@
+@import "tailwindcss";
+
+/* ============================================================
+   LotusPlay Connect — Design System (refined DARK theme)
+   Reference look: deep indigo canvas, vibrant violet accent,
+   crisp solid panels with subtle violet-tinted borders.
+   ============================================================ */
+
+@theme {
+  /* Accent — vibrant violet (primary) */
+  --color-lotus-50: #f3f0ff;
+  --color-lotus-100: #e7e0ff;
+  --color-lotus-200: #d3c6ff;
+  --color-lotus-300: #b9a4ff;
+  --color-lotus-400: #9a7dff;
+  --color-lotus-500: #7c5cfc;
+  --color-lotus-600: #6a3ff2;
+  --color-lotus-700: #5a2fd6;
+  --color-lotus-800: #4a25af;
+  --color-lotus-900: #3a1e88;
+
+  --color-petal-400: #f472b6;
+  --color-petal-500: #ec4899;
+  --color-petal-600: #db2777;
+
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+
+  /* Surfaces — lifted, colorful dark violet (lighter than near-black) */
+  --color-ink-950: #120d24;
+  --color-ink-900: #1a1430; /* page background (soft dark violet) */
+  --color-ink-850: #241b40; /* card */
+  --color-ink-800: #2d2150; /* input / raised */
+  --color-ink-700: #3a2c63; /* hover / raised-2 */
+  --color-ink-600: #4a3a7a;
+
+  /* Text — light on the violet canvas */
+  --color-mist-100: #f7f4ff; /* headings */
+  --color-mist-200: #e0d8f5; /* strong body */
+  --color-mist-300: #bcb1de; /* body / muted */
+  --color-mist-400: #968abb; /* faint */
+  --color-mist-500: #756a9c; /* faintest */
+  --color-mist-600: #564d78;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-poppins), var(--font-inter), sans-serif;
+
+  --radius-xl2: 1.25rem;
+
+  --shadow-glow: 0 0 0 1px rgba(124, 92, 252, 0.25);
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-rise: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-gift-pop: gift-pop 1.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Entrance ONLY — pops in and STAYS fully visible. Used by the winner/results
+     popup. (Do NOT use gift-pop there: gift-pop fades to opacity:0 and floats
+     away by design, which made the results card vanish after ~1s.) */
+  --animate-modal-pop: modal-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-gift-burst: gift-burst 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-gift-glow: gift-glow 2.4s ease-out both;
+  --animate-gift-spark: gift-spark 1.5s ease-out both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  80%, 100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes lotus-float-up {
+  0% { opacity: 0; transform: translateY(0) scale(0.6); }
+  15% { opacity: 1; transform: translateY(-10px) scale(1); }
+  100% { opacity: 0; transform: translateY(-160px) scale(1.1); }
+}
+@keyframes gift-pop {
+  0% { opacity: 0; transform: translateY(50px) scale(0.3); }
+  18% { opacity: 1; transform: translateY(0) scale(1.2); }
+  35% { transform: translateY(-6px) scale(1); }
+  72% { opacity: 1; transform: translateY(-24px) scale(1.05); }
+  100% { opacity: 0; transform: translateY(-120px) scale(0.85); }
+}
+/* Winner/results popup entrance. Ends at opacity:1 / scale:1 and HOLDS there —
+   never fades out on its own. The card stays until the player chooses. */
+@keyframes modal-pop {
+  0% { opacity: 0; transform: translateY(12px) scale(0.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Gift lands ON the receiver's avatar: emoji pops big, hangs, then floats up. */
+@keyframes gift-burst {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.2) rotate(-12deg); }
+  20%  { opacity: 1; transform: translateY(0) scale(1.7) rotate(6deg); }
+  38%  { transform: translateY(-2px) scale(1.25) rotate(-3deg); }
+  70%  { opacity: 1; transform: translateY(-18px) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-46px) scale(0.9); }
+}
+/* Golden glow ring that pulses on the avatar as the gift lands. */
+@keyframes gift-glow {
+  0%   { opacity: 0; transform: scale(0.7); box-shadow: 0 0 0 0 rgba(251,191,36,0.0); }
+  18%  { opacity: 1; transform: scale(1.05); box-shadow: 0 0 22px 6px rgba(251,191,36,0.55); }
+  55%  { opacity: 0.8; transform: scale(1.18); box-shadow: 0 0 16px 3px rgba(251,191,36,0.35); }
+  100% { opacity: 0; transform: scale(1.35); box-shadow: 0 0 0 0 rgba(251,191,36,0); }
+}
+/* Sparkle particles flinging outward from the avatar. */
+@keyframes gift-spark {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.4); }
+  25%  { opacity: 1; transform: translate(0, -4px) scale(1.1); }
+  100% { opacity: 0; transform: translate(var(--sx, 10px), var(--sy, -14px)) scale(0.5); }
+}
+/* ==========================================================================
+   SPEAKING (active-speaker) EFFECTS — admin-selectable (config.speakingFx).
+   Applied to a member's avatar in the voice-room seat grid WHILE they speak.
+   Every effect is transform/opacity/box-shadow only (GPU-composited) and stays
+   CONTAINED to the avatar. The DEFAULT is a calm, steady glow — it does NOT
+   react to the raw mic amplitude, so it never "blinks"/jitters (the old behaviour
+   the client asked to remove). Duration comes from --sfx-dur, colour from --sfx-col.
+   ========================================================================== */
+.sfx { --sfx-col: 124, 92, 252; --sfx-dur: 1.6s; will-change: transform, box-shadow; }
+
+/* Simple Glow — a soft, steady halo that breathes gently. */
+@keyframes sfx-glow { 0%,100% { box-shadow: 0 0 8px 1px rgba(var(--sfx-col), 0.45); } 50% { box-shadow: 0 0 20px 5px rgba(var(--sfx-col), 0.7); } }
+.sfx-glow { border-radius: 9999px; animation: sfx-glow var(--sfx-dur) ease-in-out infinite; }
+
+/* Scale / Zoom — a gentle grow-shrink (much calmer than the old snap to 105%). */
+@keyframes sfx-scale { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.sfx-scale { animation: sfx-scale var(--sfx-dur) ease-in-out infinite; }
+
+/* Floating Border — the avatar bobs up and down softly. */
+@keyframes sfx-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.sfx-float { border-radius: 9999px; box-shadow: 0 0 0 2px rgba(var(--sfx-col), 0.6); animation: sfx-float var(--sfx-dur) ease-in-out infinite; }
+
+/* Neon Border — a bright ring that pulses its glow in and out. */
+@keyframes sfx-neon { 0%,100% { box-shadow: 0 0 0 2px rgba(var(--sfx-col), 0.9), 0 0 10px 2px rgba(var(--sfx-col), 0.5); } 50% { box-shadow: 0 0 0 3px rgba(var(--sfx-col), 1), 0 0 22px 6px rgba(var(--sfx-col), 0.8); } }
+.sfx-neon { border-radius: 9999px; animation: sfx-neon var(--sfx-dur) ease-in-out infinite; }
+
+/* Pulse — a single steady scale pulse WITH a matching glow. */
+@keyframes sfx-pulse { 0%,100% { transform: scale(1); box-shadow: 0 0 6px 1px rgba(var(--sfx-col), 0.4); } 50% { transform: scale(1.04); box-shadow: 0 0 18px 4px rgba(var(--sfx-col), 0.65); } }
+.sfx-pulse { border-radius: 9999px; animation: sfx-pulse var(--sfx-dur) ease-in-out infinite; }
+
+/* ---- Overlay effects (rendered as an absolutely-positioned ring OVER the avatar) ---- */
+.sfx-ov { position: absolute; inset: -3px; border-radius: 9999px; pointer-events: none; }
+
+/* Ring Pulse — one ring expands outward and fades, on a loop. Capped at ~1.35 so
+   it stays close to the avatar and isn't clipped by the seat grid's scroll edge. */
+@keyframes sfx-ring { 0% { transform: scale(0.9); opacity: 0.8; } 100% { transform: scale(1.35); opacity: 0; } }
+.sfx-ring-1 { border: 2px solid rgba(var(--sfx-col), 0.9); animation: sfx-ring var(--sfx-dur) ease-out infinite; }
+
+/* Ripple / Voice Waves — several concentric rings staggered for a radar feel. */
+.sfx-ripple-1 { border: 2px solid rgba(var(--sfx-col), 0.85); animation: sfx-ring var(--sfx-dur) ease-out infinite; }
+.sfx-ripple-2 { border: 2px solid rgba(var(--sfx-col), 0.6); animation: sfx-ring var(--sfx-dur) ease-out infinite; animation-delay: calc(var(--sfx-dur) / 2); }
+.sfx-ripple-3 { border: 2px solid rgba(var(--sfx-col), 0.4); animation: sfx-ring var(--sfx-dur) ease-out infinite; animation-delay: calc(var(--sfx-dur) / 4); }
+
+/* Rotating Ring — a conic gradient ring sweeps around the avatar. */
+@keyframes sfx-rotate { to { transform: rotate(360deg); } }
+.sfx-rotate-1 { inset: -4px; background: conic-gradient(from 0deg, transparent 0%, rgba(var(--sfx-col), 0.9) 25%, transparent 55%); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 4px)); animation: sfx-rotate var(--sfx-dur) linear infinite; }
+
+/* Equalizer — small bars bounce under the avatar. */
+@keyframes sfx-eq { 0%,100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
+/* Equalizer bars sit ON the avatar's lower edge (not below it) so they don't
+   collide with the centred mic-status badge, which lives just under the avatar. */
+.sfx-eq { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; align-items: flex-end; gap: 2px; height: 11px; pointer-events: none; }
+.sfx-eq > i { width: 3px; height: 100%; border-radius: 2px; background: rgb(var(--sfx-col)); transform-origin: bottom; animation: sfx-eq var(--sfx-dur) ease-in-out infinite; }
+.sfx-eq > i:nth-child(2) { animation-delay: calc(var(--sfx-dur) / 5); }
+.sfx-eq > i:nth-child(3) { animation-delay: calc(var(--sfx-dur) / 3); }
+.sfx-eq > i:nth-child(4) { animation-delay: calc(var(--sfx-dur) / 4); }
+.sfx-eq > i:nth-child(5) { animation-delay: calc(var(--sfx-dur) / 6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sfx-glow, .sfx-scale, .sfx-float, .sfx-neon, .sfx-pulse, .sfx-ring-1, .sfx-ripple-1, .sfx-ripple-2, .sfx-ripple-3, .sfx-rotate-1, .sfx-eq > i { animation-duration: 2.4s; }
+}
+
+/* Dice TUMBLE while rolling — a richer 3D-style roll: the die pitches and yaws on
+   its own axes (rotateX/rotateY) plus a spin, so it reads as a real tumbling dice
+   rather than a flat wobble. Still fully CONTAINED (transform-only, GPU-composited)
+   so it never sweeps into the neighbouring profile picture, which stays still. */
+@keyframes dice-roll {
+  0%   { transform: perspective(200px) rotateX(0deg) rotateY(0deg) rotate(0deg) scale(1); }
+  20%  { transform: perspective(200px) rotateX(140deg) rotateY(40deg) rotate(-12deg) scale(1.06); }
+  40%  { transform: perspective(200px) rotateX(250deg) rotateY(160deg) rotate(10deg) scale(1.05); }
+  60%  { transform: perspective(200px) rotateX(360deg) rotateY(280deg) rotate(-8deg) scale(1.07); }
+  80%  { transform: perspective(200px) rotateX(300deg) rotateY(380deg) rotate(6deg) scale(1.04); }
+  100% { transform: perspective(200px) rotateX(360deg) rotateY(360deg) rotate(0deg) scale(1); }
+}
+.animate-dice-roll { transform-origin: center; transform-style: preserve-3d; will-change: transform; animation: dice-roll 0.6s cubic-bezier(0.36, 0.1, 0.2, 1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-dice-roll { animation: dice-roll 0.6s ease-in-out infinite; }
+}
+
+/* ---- DICE-ROLL ANIMATION STYLES (admin-selectable, config.gameAnim.diceStyle) --
+   The visual the die plays WHILE rolling (tap Roll → until the number lands). Each
+   is transform-only (GPU-composited) and CONTAINED to the die, so it never affects
+   the roll timing/result or drifts into neighbouring pieces. All base off the same
+   0.6s loop as the classic tumble. */
+.dice-anim-tumble { transform-origin: center; transform-style: preserve-3d; will-change: transform; animation: dice-roll 0.6s cubic-bezier(0.36, 0.1, 0.2, 1) infinite; }
+
+@keyframes dice-spin { from { transform: rotate(0deg) scale(1.04); } to { transform: rotate(360deg) scale(1.04); } }
+.dice-anim-spin { transform-origin: center; will-change: transform; animation: dice-spin 0.4s linear infinite; }
+
+@keyframes dice-flip {
+  0% { transform: perspective(220px) rotateX(0deg); }
+  100% { transform: perspective(220px) rotateX(360deg); }
+}
+.dice-anim-flip { transform-origin: center; transform-style: preserve-3d; will-change: transform; animation: dice-flip 0.5s cubic-bezier(0.4, 0, 0.3, 1) infinite; }
+
+@keyframes dice-shake {
+  0%,100% { transform: translateX(0) rotate(0deg); }
+  20% { transform: translateX(-3px) rotate(-10deg); }
+  40% { transform: translateX(3px) rotate(9deg); }
+  60% { transform: translateX(-2px) rotate(-7deg); }
+  80% { transform: translateX(2px) rotate(6deg); }
+}
+.dice-anim-shake { transform-origin: center; will-change: transform; animation: dice-shake 0.28s ease-in-out infinite; }
+
+@keyframes dice-bounce {
+  0%,100% { transform: translateY(0) rotate(0deg) scale(1); }
+  30% { transform: translateY(-9px) rotate(-14deg) scale(1.05); }
+  55% { transform: translateY(0) rotate(8deg) scale(0.98); }
+  75% { transform: translateY(-4px) rotate(-5deg) scale(1.02); }
+}
+.dice-anim-bounce { transform-origin: center; will-change: transform; animation: dice-bounce 0.5s cubic-bezier(0.3, 0.1, 0.3, 1) infinite; }
+
+@keyframes dice-wobble {
+  0%,100% { transform: rotate(0deg) scale(1.03); }
+  25% { transform: rotate(16deg) scale(1.05); }
+  50% { transform: rotate(-12deg) scale(1.02); }
+  75% { transform: rotate(8deg) scale(1.04); }
+}
+.dice-anim-wobble { transform-origin: center; will-change: transform; animation: dice-wobble 0.42s ease-in-out infinite; }
+
+@keyframes dice-zoom {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.28) rotate(180deg); }
+}
+.dice-anim-zoom { transform-origin: center; will-change: transform; animation: dice-zoom 0.44s ease-in-out infinite; }
+
+@keyframes dice-roll2d { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+.dice-anim-roll2d { transform-origin: center; will-change: transform; animation: dice-roll2d 0.35s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-anim-tumble, .dice-anim-spin, .dice-anim-flip, .dice-anim-shake,
+  .dice-anim-bounce, .dice-anim-wobble, .dice-anim-zoom, .dice-anim-roll2d {
+    animation-timing-function: ease-in-out;
+  }
+}
+
+/* ---- ACTIVE-PLAYER TURN ANIMATIONS (admin-selectable) --------------------
+   Applied to ONLY the player whose turn it is. Every style animates just
+   `transform` / `opacity` (and pseudo-elements), so they are GPU-composited and
+   cannot affect dice rolling, token movement or the game's frame rate. The
+   element they sit on is `position: relative` so the ring/particle styles can
+   use ::before/::after without adding DOM. */
+/* Shake — a gentle in-place WOBBLE. It rotates around its own centre and never
+   translates, so the profile picture stays fixed in position (client asked that
+   the avatar not drift left-right while rolling). */
+@keyframes avatar-shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-4deg); }
+  50% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}
+@keyframes turn-bounce    { 0%, 100% { transform: translateY(0); }      50% { transform: translateY(-16%); } }
+@keyframes turn-pulse     { 0%, 100% { transform: scale(1); }           50% { transform: scale(1.10); } }
+@keyframes turn-rotate    { 0%, 100% { transform: rotate(-7deg); }      50% { transform: rotate(7deg); } }
+@keyframes turn-breathing { 0%, 100% { transform: scale(1); }           50% { transform: scale(1.06); } }
+@keyframes turn-heartbeat {
+  0% { transform: scale(1); } 14% { transform: scale(1.13); } 28% { transform: scale(1); }
+  42% { transform: scale(1.13); } 70%, 100% { transform: scale(1); }
+}
+@keyframes turn-ring   { 0%, 100% { opacity: .35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+@keyframes turn-ripple { 0% { opacity: .85; transform: scale(1); } 100% { opacity: 0; transform: scale(1.55); } }
+@keyframes turn-spark  { 0%, 100% { opacity: 0; transform: scale(.5); } 50% { opacity: 1; transform: scale(1.2); } }
+
+.animate-avatar-shake,
+.turn-anim-shake     { animation: avatar-shake  0.38s ease-in-out infinite; }
+.turn-anim-bounce    { animation: turn-bounce   0.90s ease-in-out infinite; }
+.turn-anim-pulse     { animation: turn-pulse    1.10s ease-in-out infinite; }
+.turn-anim-rotate    { animation: turn-rotate   0.80s ease-in-out infinite; }
+.turn-anim-breathing { animation: turn-breathing 2.4s ease-in-out infinite; }
+.turn-anim-heartbeat { animation: turn-heartbeat 1.30s ease-in-out infinite; }
+
+/* Glow — a pulsing ring drawn OUTSIDE the avatar (no layout shift). */
+.turn-anim-glow::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 9999px;
+  border: 2px solid rgba(56, 189, 248, 0.95); pointer-events: none;
+  animation: turn-ring 1.4s ease-in-out infinite; will-change: transform, opacity;
+}
+/* Ripple — an expanding circle that fades outward. */
+.turn-anim-ripple::after {
+  content: ""; position: absolute; inset: -2px; border-radius: 9999px;
+  border: 2px solid rgba(56, 189, 248, 0.85); pointer-events: none;
+  animation: turn-ripple 1.5s ease-out infinite; will-change: transform, opacity;
+}
+/* Sparkle — two small twinkling particles at opposite corners. */
+.turn-anim-sparkle::before,
+.turn-anim-sparkle::after {
+  content: "✦"; position: absolute; font-size: 11px; line-height: 1;
+  color: #fde68a; pointer-events: none; text-shadow: 0 0 6px rgba(253,230,138,.9);
+  animation: turn-spark 1.2s ease-in-out infinite; will-change: transform, opacity;
+}
+.turn-anim-sparkle::before { top: -7px; right: -3px; }
+.turn-anim-sparkle::after  { bottom: -5px; left: -5px; animation-delay: .6s; }
+
+/* Respect the OS "reduce motion" setting — keep the highlight, drop the motion. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-avatar-shake, .turn-anim-shake, .turn-anim-bounce, .turn-anim-pulse,
+  .turn-anim-rotate, .turn-anim-breathing, .turn-anim-heartbeat { animation: none; }
+  .turn-anim-glow::after, .turn-anim-ripple::after,
+  .turn-anim-sparkle::before, .turn-anim-sparkle::after { animation: none; opacity: .8; }
+}
+
+/* ---- Ludo arena: active-player highlight, token capture, win celebration ---- */
+@keyframes turn-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.55), 0 0 18px 2px rgba(56,189,248,0.35); }
+  50%      { box-shadow: 0 0 0 4px rgba(56,189,248,0.25), 0 0 30px 6px rgba(56,189,248,0.55); }
+}
+.animate-turn-glow { animation: turn-glow 1.6s ease-in-out infinite; }
+
+@keyframes token-pop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-token-pop { animation: token-pop 0.35s cubic-bezier(0.16,1,0.3,1) both; }
+
+@keyframes token-capture {
+  0%   { transform: scale(1) rotate(0deg); opacity: 1; }
+  50%  { transform: scale(1.4) rotate(20deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(90deg); opacity: 0; }
+}
+.animate-token-capture { animation: token-capture 0.5s ease-in both; }
+
+/* ---- Coin movement styles (admin-selectable) — played on the moving coin while
+   it steps cell-to-cell. Each loops through the walk; "instant"/"slide" have no
+   extra motion. Durations are short so they read once per hop. ---- */
+@keyframes coin-jump   { 0%,100% { transform: translateY(0); }        45% { transform: translateY(-38%) scale(1.05); } }
+@keyframes coin-bounce { 0% { transform: translateY(0); } 30% { transform: translateY(-32%); } 55% { transform: translateY(0); } 72% { transform: translateY(-14%); } 100% { transform: translateY(0); } }
+@keyframes coin-fly    { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-46%) scale(1.28); } }
+@keyframes coin-spin   { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.coin-move-jump   { animation: coin-jump   0.42s ease-in-out infinite; }
+.coin-move-bounce { animation: coin-bounce 0.5s  ease-out    infinite; }
+.coin-move-fly    { animation: coin-fly    0.5s  ease-in-out infinite; }
+.coin-move-spin   { animation: coin-spin   0.55s linear      infinite; }
+
+@keyframes win-burst {
+  0%   { transform: scale(0.6) rotate(-8deg); opacity: 0; }
+  50%  { transform: scale(1.12) rotate(4deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.animate-win-burst { animation: win-burst 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* Roll announcement banner — a quick pop-in so every player notices the rolled
+   number the moment it lands. Transform/opacity only (GPU). */
+@keyframes roll-pop {
+  0%   { transform: scale(0.75) translateY(-6px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.animate-roll-pop { animation: roll-pop 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(-30px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(70vh) rotate(540deg); opacity: 0; }
+}
+
+/* Lotus BLOOM — the token "reaches home" celebration from the reference art:
+   the lotus scales up with a radiant glow, then settles. */
+@keyframes lotus-bloom {
+  0%   { transform: scale(0.35); opacity: 0; filter: brightness(1.6); }
+  45%  { transform: scale(1.3);  opacity: 1; filter: brightness(1.4); }
+  100% { transform: scale(1);    opacity: 1; filter: brightness(1); }
+}
+.animate-lotus-bloom { animation: lotus-bloom 0.85s cubic-bezier(0.16,1,0.3,1) both; }
+
+/* A pink petal drifting outward + up from a home bloom. */
+@keyframes petal-out {
+  0%   { transform: translate(0,0) scale(0.6) rotate(0deg); opacity: 0; }
+  25%  { opacity: 1; }
+  100% { transform: translate(var(--px), var(--py)) scale(1) rotate(220deg); opacity: 0; }
+}
+.animate-petal-out { animation: petal-out 1s ease-out both; }
+
+/* Golden trailing spark left behind a moving lotus token. */
+@keyframes trail-fade {
+  0%   { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 0;    transform: scale(0.5); }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* Stylish media seek bar thumb (room media player). */
+.lotus-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 14px;
+  width: 14px;
+  border-radius: 9999px;
+  background: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
+  cursor: pointer;
+}
+.lotus-range::-moz-range-thumb {
+  height: 14px;
+  width: 14px;
+  border: none;
+  border-radius: 9999px;
+  background: #a78bfa;
+  cursor: pointer;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Stop the mobile browser's pull-to-refresh gesture from reloading the whole
+     app. A reload tears down and re-initialises the voice session (= the room
+     "exits and rejoins" on an over-scroll). `contain` keeps normal scrolling but
+     cancels the reload/overscroll chaining. */
+  overscroll-behavior-y: contain;
+}
+
+body {
+  background:
+    radial-gradient(1100px 700px at 100% -10%, rgba(251, 146, 60, 0.18), transparent 55%),
+    radial-gradient(1000px 700px at -8% 0%, rgba(168, 85, 247, 0.16), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(236, 72, 153, 0.16), transparent 60%),
+    radial-gradient(800px 600px at 90% 110%, rgba(56, 189, 248, 0.12), transparent 60%),
+    var(--color-ink-900);
+  background-attachment: fixed;
+  color: var(--color-mist-300);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain; /* belt-and-braces: no pull-to-refresh reload */
+  min-height: 100dvh;
+}
+
+/* Consistent, slightly lighter icon stroke across the whole app */
+svg.lucide {
+  stroke-width: 1.75;
+}
+
+/* Utilities */
+@layer utilities {
+  /* Wordmark — vibrant brand gradient (logo colors) */
+  .text-gradient {
+    background: linear-gradient(100deg, #fb923c 0%, #ec4899 45%, #8b5cf6 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-light {
+    background: linear-gradient(100deg, #fb923c 0%, #ec4899 45%, #8b5cf6 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gold-gradient {
+    background: linear-gradient(180deg, #fde68a 0%, #f59e0b 60%, #b45309 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Cards — raised violet panel with a soft border + glow */
+  .glass {
+    background: linear-gradient(180deg, rgba(45, 33, 80, 0.55), rgba(36, 27, 64, 0.55));
+    border: 1px solid rgba(168, 139, 250, 0.14);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.6);
+  }
+  .glass-strong {
+    background: linear-gradient(180deg, rgba(52, 38, 92, 0.7), rgba(40, 30, 70, 0.7));
+    border: 1px solid rgba(168, 139, 250, 0.2);
+    box-shadow: 0 18px 44px -22px rgba(0, 0, 0, 0.7);
+  }
+  .ring-brand {
+    box-shadow: 0 0 0 1px rgba(124, 92, 252, 0.45);
+  }
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.07), transparent);
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  /* Slim scrollbar for the side menu rail. The global bar is 10px, which looks
+     heavy inside a 16rem column — but it must stay VISIBLE, because it is the
+     only thing telling you the menu has more items below. */
+  .lotus-scroll { scrollbar-width: thin; scrollbar-color: rgba(124, 58, 237, 0.4) transparent; }
+  .lotus-scroll::-webkit-scrollbar { width: 6px; }
+  .lotus-scroll::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, 0.4);
+    border: none;
+    border-radius: 999px;
+  }
+  .lotus-scroll::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.65); }
+
+  /* MOBILE "Seats + Chat" options rail. The room buttons (Games, Chat, Stickers,
+     Gift, Media, Option, Minimize) are wide pills in the room; in this 4.5rem
+     rail they become icon-over-label tiles instead. Restyled from here, via the
+     `room-ctrl` marker class, so none of those buttons needs to know this view
+     exists. */
+  .room-rail .room-ctrl {
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    padding: 0.5rem 0.125rem;
+    border-radius: 0.75rem;
+    font-size: 10px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .room-rail .room-ctrl svg { width: 1.25rem; height: 1.25rem; }
+  /* The mic bar is the last tile in the rail: same shape, no top margin. */
+  .room-rail > button:last-child {
+    margin-top: 0;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.5rem 0.125rem;
+    border-radius: 0.75rem;
+    font-size: 10px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .room-rail > button:last-child svg { width: 1rem; height: 1rem; }
+  /* Hairline border for the surfaces. --app-line is set live by the theme
+     injector so a lighter surface gets a matching (darker) hairline. */
+  .border-line { border-color: var(--app-line, rgba(255, 255, 255, 0.10)); }
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.25);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.4); background-clip: padding-box; }
+
+::selection { background: rgba(236, 72, 153, 0.35); color: #fff; }
